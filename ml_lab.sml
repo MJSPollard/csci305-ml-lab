@@ -2,12 +2,44 @@
 *
 * CSCI 305 - ML Programming Lab
 *
-* <firstname> <lastname>
-* <email-address>
+* Michael Pollard
+* MJSPollard@gmail.com
 *
 ***************************************************************)
 
 (* Define your data type and functions here *)
+
+(* definition of datatype used to represent sets *) 
+datatype 'element set = Empty | Set of 'element * 'element set;
+
+(* function that increments all ints in a list by 1 *)
+fun f [] = []
+  | f (x::xs) = (x+1) :: (f xs);
+
+(* function that checks whether an element is in a set, is so, returns true*)
+fun isMember e Empty = false 
+  | isMember e (Set(x, xs)) = 
+    if e = x then true
+    else isMember e xs;
+
+(* function that converts a list to a set *)
+fun list2Set [] = Empty
+  | list2Set e = 
+    foldr (fn (x, xs) =>
+    if (isMember x xs) then xs
+    else Set(x, xs)) Empty e;
+
+(* function that returns the union of two sets *)
+fun union Empty s = s
+  | union (Set(x, xs)) s =
+    if isMember x s then union xs s
+    else Set(x, union xs s);
+
+(* function that returns the intersection of two sets *)
+fun intersect Empty s = Empty
+  | intersect (Set(x, xs)) s =
+    if isMember x s then Set(x, (intersect xs s))
+    else intersect xs s;
 
 (* Simple function to stringify the contents of a Set of characters *)
 fun stringifyCharSet Empty = ""
@@ -37,7 +69,7 @@ list2Set [6, 2, 2];
 list2Set ["x", "y", "z", "x"];
 
 (* Question 1 *)
-f [3, 1, 4, 1, 5, 9]
+f [3, 1, 4, 1, 5, 9];
 
 (* Question 5 *)
 val quest5 = isMember "one" (list2Set ["1", "2", "3", "4"]);
@@ -48,6 +80,7 @@ val quest7 = list2Set ["it", "was", "the", "best", "of", "times,", "it", "was", 
 print "\nQuestion 7: ";
 print_str quest7;
 print "\n";
+
 
 (* Question 9 *)
 print "\nQuestion 9: ";
